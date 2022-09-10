@@ -1,9 +1,12 @@
 #include <iostream>
 #include <string.h>
+#include <algorithm>
+#include <array>
 using namespace std;
 
-int move_checker(string player_name,char playerAinputs[5], char playerBinputs[5],string character_name, string move_name, char chess_grid[5][5])
+int move_checker(string player_name,string playerAinputs[5], string playerBinputs[5],string character_name, string move_name, string chess_grid[5][5])
 {
+	bool existsA,existsB;
 	for(int i=0;i<5;i++)
 	{	
 		for(int j=0;j<5;j++)
@@ -11,7 +14,11 @@ int move_checker(string player_name,char playerAinputs[5], char playerBinputs[5]
 			if(chess_grid[i][j] == player_name+"-"+character_name)
 			{	
 				// Valid player check
-				if(!playerAinputs.contains(character_name) || !playerBinputs.contains(character_name) ){
+				
+
+				existsA = find(begin(playerAinputs), end(playerAinputs), character_name) != end(playerAinputs);
+				existsB = find(begin(playerBinputs), end(playerBinputs), character_name) != end(playerBinputs);
+				if(!existsA || !existsB){
 					return -1;
 				}
 				// Valid move check
@@ -28,33 +35,33 @@ int move_checker(string player_name,char playerAinputs[5], char playerBinputs[5]
 				{
 					
 					// friendly fire check
-					if(chess_grid[i][j-1].contains("A")){
+					if (chess_grid[i][j-1].find("A") != std::string::npos){
 						return -1;
 					}
-					else if(chess_grid[i][j+1].contains("A")){
+					else if (chess_grid[i][j+1].find("A") != std::string::npos){
 						return -1;
 					}
-					else if(chess_grid[i+1][j].contains("A")){
+					else if (chess_grid[i+1][j].find("A") != std::string::npos){
 						return -1;
 					}
-					else if(chess_grid[i-1][j].contains("A")){
+					else if (chess_grid[i-1][j].find("A") != std::string::npos){
 						return -1;
 					}
+					
 				}
 				else if(player_name == "B")
 				{
-					
 					// friendly fire check
-					if(chess_grid[i][j-1].contains("B")){
+					if (chess_grid[i][j-1].find("B") != std::string::npos){
 						return -1;
 					}
-					else if(chess_grid[i][j+1].contains("B")){
+					else if (chess_grid[i][j+1].find("B") != std::string::npos){
 						return -1;
 					}
-					else if(chess_grid[i+1][j].contains("B")){
+					else if (chess_grid[i+1][j].find("B") != std::string::npos){
 						return -1;
 					}
-					else if(chess_grid[i-1][j].contains("B")){
+					else if (chess_grid[i-1][j].find("B") != std::string::npos){
 						return -1;
 					}
 				}
@@ -63,7 +70,7 @@ int move_checker(string player_name,char playerAinputs[5], char playerBinputs[5]
 	}
 }
 
-void move_maker(string player_name,char playerAinputs[5], char playerBinputs[5],string character_name, string move_name, char chess_grid[5][5], int counter)
+void move_maker(string player_name,string playerAinputs[5], string playerBinputs[5],string character_name, string move_name, string chess_grid[5][5], int counter)
 {
 	for(int i=0;i<5;i++)
 	{	
@@ -71,22 +78,23 @@ void move_maker(string player_name,char playerAinputs[5], char playerBinputs[5],
 		{
 			if(chess_grid[i][j] == player_name+"-"+character_name)
 			{	
-				
 				if(move_name == "L")
 				{
 					if(player_name=="A")
 					{
-						if(chess_grid[i][j-1].contains("B"))
+						if (chess_grid[i][j-1].find("B") != std::string::npos){
 							playerBinputs[counter] = '\0';  // making random inputs of player B as NULL, to keep track of how many players are left. 
-
+						}
+							
 						chess_grid[i][j-1] = chess_grid[i][j];
 						chess_grid[i][j] = "_";
 					}
 
 					else if(player_name=="B")
 					{
-						if(chess_grid[i][j+1].contains("A"))
-							playerAinputs[counter] = '\0';   // making random inputs of player A as NULL, to keep track of how many players are left. 
+						if (chess_grid[i][j+1].find("A") != std::string::npos){
+						playerAinputs[counter] = '\0';  // making random inputs of player A as NULL, to keep track of how many players are left.
+						}
 							
 						chess_grid[i][j+1] = chess_grid[i][j];
 						chess_grid[i][j] = "_";
@@ -97,8 +105,9 @@ void move_maker(string player_name,char playerAinputs[5], char playerBinputs[5],
 				{
 					if(player_name=="A")
 					{
-						if(chess_grid[i][j+1].contains("B"))
+						if (chess_grid[i][j+1].find("B") != std::string::npos){
 							playerBinputs[counter] = '\0';  
+						}
 
 						chess_grid[i][j+1] = chess_grid[i][j];
 						chess_grid[i][j] = "_";
@@ -106,8 +115,9 @@ void move_maker(string player_name,char playerAinputs[5], char playerBinputs[5],
 
 					else if(player_name=="B")
 					{
-						if(chess_grid[i][j-1].contains("A"))
+						if (chess_grid[i][j-1].find("A") != std::string::npos){
 							playerAinputs[counter] = '\0';  
+						}
 							
 						chess_grid[i][j-1] = chess_grid[i][j];
 						chess_grid[i][j] = "_";
@@ -117,8 +127,9 @@ void move_maker(string player_name,char playerAinputs[5], char playerBinputs[5],
 				{
 					if(player_name=="A")
 					{
-						if(chess_grid[i-1][j].contains("B"))
+						if (chess_grid[i-1][j].find("B") != std::string::npos){
 							playerBinputs[counter] = '\0';  
+						}
 
 						chess_grid[i-1][j] = chess_grid[i][j];
 						chess_grid[i][j] = "_";
@@ -126,8 +137,9 @@ void move_maker(string player_name,char playerAinputs[5], char playerBinputs[5],
 
 					else if(player_name=="B")
 					{
-						if(chess_grid[i+1][j].contains("A"))
+						if (chess_grid[i+1][j].find("A") != std::string::npos){
 							playerAinputs[counter] = '\0';  
+						}
 							
 						chess_grid[i+1][j] = chess_grid[i][j];
 						chess_grid[i][j] = "_";
@@ -137,8 +149,9 @@ void move_maker(string player_name,char playerAinputs[5], char playerBinputs[5],
 				{
 					if(player_name=="A")
 					{
-						if(chess_grid[i+1][j].contains("B"))
+						if (chess_grid[i+1][j].find("B") != std::string::npos){
 							playerBinputs[counter] = '\0';  
+						}
 
 						chess_grid[i+1][j] = chess_grid[i][j];
 						chess_grid[i][j] = "_";
@@ -146,8 +159,9 @@ void move_maker(string player_name,char playerAinputs[5], char playerBinputs[5],
 
 					else if(player_name=="B")
 					{
-						if(chess_grid[i-1][j].contains("A"))
+						if (chess_grid[i-1][j].find("A") != std::string::npos){
 							playerAinputs[counter] = '\0';  
+						}
 							
 						chess_grid[i-1][j] = chess_grid[i][j];
 						chess_grid[i][j] = "_";
@@ -156,22 +170,13 @@ void move_maker(string player_name,char playerAinputs[5], char playerBinputs[5],
 			}
 		}
 	}
-
-	cout<<"Current Grid:"<<endl;
-		for(int i=0;i<5;i++)
-		{	cout<<"\n";
-			for(int j=0;j<5;j++)
-				cout<< chess_grid[i][j] << " ";
-		}
 }
-
-
 
 
 
 int main()
 {
-	char ipA[5], ipB[5];
+	string ipA[5], ipB[5];
 	string moves, character_name, move_name;
 
 	int result, pos, counterA = 0, counterB = 0; // for personal refernce to keep track of deleted elements; // whether the move is valid or not
@@ -191,11 +196,11 @@ int main()
 	
 	// inserting characters in grid
 	for(int i=0;i<5;i++)
-		chess_grid[4][i] = "A"+"-"+ipA[i];
+		chess_grid[4][i] = "A-"+ipA[i];
 	
 
 	// Displaying the current board
-	cout<<"Current Grid:"<<endl;
+	cout<<"Current Grid:"<<std::endl;
 	for(int i=0;i<5;i++)
 	{	cout<<"\n";
 		for(int j=0;j<5;j++)
@@ -211,11 +216,11 @@ int main()
 	
 	// inserting characters in grid
 	for(int i=0;i<5;i++)
-		chess_grid[0][i] = "B"+"-"+ipB[i];
+		chess_grid[0][i] = "B-"+ipB[i];
 	
 
 	// Displaying the current board
-	cout<<"Current Grid:"<<endl;
+	cout<<"Current Grid:"<<std::endl;
 	for(int i=0;i<5;i++)
 	{	cout<<"\n";
 		for(int j=0;j<5;j++)
@@ -224,7 +229,7 @@ int main()
 
 
 
-	while(strlen(ipA) == 0 || strlen(ipB) == 0)
+	while(ipA.empty()==1 || ipB.empty()==1)
 	{
 			
 			cout << "Player A's Move: ";
@@ -255,6 +260,12 @@ int main()
 			
 			counterA++;
 			move_maker("A",ipA,ipB,character_name,move_name,chess_grid,counterA); // to make the changes in grid and displaying the result 
+			cout<<"Current Grid:"<<endl;
+			for(int i=0;i<5;i++)
+			{	cout<<"\n";
+				for(int j=0;j<5;j++)
+					cout << chess_grid[i][j] << " ";
+			}
 
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -284,9 +295,15 @@ int main()
 			}
 			counterB++;
 			move_maker("B",ipA,ipB,character_name,move_name,chess_grid,counterB); // to make the changes in grid and displaying the result
+			cout<<"Current Grid:"<<endl;
+			for(int i=0;i<5;i++)
+			{	cout<<"\n";
+				for(int j=0;j<5;j++)
+					cout << chess_grid[i][j] << " ";
+			}
 	}
 
-	if(strlen(ipA) == 0)
+	if(ipA.empty()==1)
 		cout <<"B is the winner!!!";
 	else
 		cout <<"A is the winner!!!";
